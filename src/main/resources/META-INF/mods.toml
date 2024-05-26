@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[40,)"
+license="MIT"
+[[mods]]
+modId="dragonadventure"
+version="${file.jarVersion}"
+displayName="Dragon Adventure"
+authors="Kolala"
+description='''
+This mod adds content exclusive to Dragon Adventure
+'''
+
+[[dependencies.dragonadventure]]
+    modId="forge"
+    mandatory=true
+    versionRange="[40,)"
+    ordering="NONE"
+    side="SERVER"
+[[dependencies.dragonadventure]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.18.2,1.19)"
+    ordering="NONE"
+    side="SERVER"

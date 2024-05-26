@@ -1,0 +1,5 @@
+{
+  "command.dragonadventure.rtp.no_level": "Couldn't find level.",
+  "command.dragonadventure.rtp.success": "Successfully teleported to random location: %s %s %s",
+  "command.dragonadventure.rtp.not_found": "Couldn't find any location. Try somewhere else."
+}
