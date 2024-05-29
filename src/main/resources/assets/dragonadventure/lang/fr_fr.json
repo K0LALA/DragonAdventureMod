@@ -1,0 +1,5 @@
+{
+  "command.dragonadventure.rtp.no_level": "Impossible de trouver le niveau.",
+  "command.dragonadventure.rtp.success": "Téléportation aléatoire effectuée avec succès: %s %s %s",
+  "command.dragonadventure.rtp.not_found": "Impossible de trouver un endroit. Essayez autre part."
+}
