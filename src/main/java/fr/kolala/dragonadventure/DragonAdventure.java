@@ -3,6 +3,7 @@ package fr.kolala.dragonadventure;
 import com.mojang.logging.LogUtils;
 import fr.kolala.dragonadventure.commands.RandomTpCommand;
 import fr.kolala.dragonadventure.commands.SpawnProtectionCommand;
+import fr.kolala.dragonadventure.events.ModEvents;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -14,7 +15,6 @@ import org.slf4j.Logger;
 public class DragonAdventure
 {
     public static final String MOD_ID = "dragonadventure";
-
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public DragonAdventure()
@@ -23,6 +23,7 @@ public class DragonAdventure
 
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.addListener(this::registerCommands);
+        MinecraftForge.EVENT_BUS.addListener(ModEvents::livingDamageEventHandler);
     }
 
     private void setup(final FMLCommonSetupEvent event)

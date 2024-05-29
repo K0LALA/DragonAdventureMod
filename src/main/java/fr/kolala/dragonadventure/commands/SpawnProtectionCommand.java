@@ -18,19 +18,28 @@ public class SpawnProtectionCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("spawnprot").requires(source -> source.hasPermission(4))
-                .then(Commands.argument("x1", IntegerArgumentType.integer()).then(Commands.argument("y1", IntegerArgumentType.integer())
-                        .then(Commands.argument("x2", IntegerArgumentType.integer()).then(Commands.argument("y2", IntegerArgumentType.integer())))))
-                .executes(context -> executeSpawnProtectionGlobal(context.getSource(), IntegerArgumentType.getInteger(context, "x1"), IntegerArgumentType.getInteger(context, "y1"),
-                        IntegerArgumentType.getInteger(context, "x2"), IntegerArgumentType.getInteger(context, "y2")))
+                .then(Commands.argument("x1", IntegerArgumentType.integer()).then(Commands.argument("z1", IntegerArgumentType.integer())
+                        .then(Commands.argument("x2", IntegerArgumentType.integer()).then(Commands.argument("z2", IntegerArgumentType.integer())
+                .executes(context -> executeSpawnProtectionGlobal(context.getSource(), IntegerArgumentType.getInteger(context, "x1"), IntegerArgumentType.getInteger(context, "z1"),
+                        IntegerArgumentType.getInteger(context, "x2"), IntegerArgumentType.getInteger(context, "z2")))))))
 
                 .then(Commands.literal("first").executes(context -> executeSpawnProtectionLocal(context.getSource(), (int) context.getSource().getPosition().x, (int) context.getSource().getPosition().z, true))
-                        .then(Commands.argument("x", IntegerArgumentType.integer()).then(Commands.argument("y", IntegerArgumentType.integer())
-                                .executes(context -> executeSpawnProtectionLocal(context.getSource(), IntegerArgumentType.getInteger(context, "x"), IntegerArgumentType.getInteger(context, "y"), true)))))
+                        .then(Commands.argument("x", IntegerArgumentType.integer()).then(Commands.argument("z", IntegerArgumentType.integer())
+                                .executes(context -> executeSpawnProtectionLocal(context.getSource(), IntegerArgumentType.getInteger(context, "x"), IntegerArgumentType.getInteger(context, "z"), true)))))
                 .then(Commands.literal("second").executes(context -> executeSpawnProtectionLocal(context.getSource(), (int) context.getSource().getPosition().x, (int) context.getSource().getPosition().z, false))
-                        .then(Commands.argument("x", IntegerArgumentType.integer()).then(Commands.argument("y", IntegerArgumentType.integer())
-                                .executes(context -> executeSpawnProtectionLocal(context.getSource(), IntegerArgumentType.getInteger(context, "x"), IntegerArgumentType.getInteger(context, "y"), false))))));
+                        .then(Commands.argument("x", IntegerArgumentType.integer()).then(Commands.argument("z", IntegerArgumentType.integer())
+                                .executes(context -> executeSpawnProtectionLocal(context.getSource(), IntegerArgumentType.getInteger(context, "x"), IntegerArgumentType.getInteger(context, "z"), false))))));
     }
 
+    /**
+     * Executes the global spawn protection command
+     * @param source {@link CommandSourceStack} of the command
+     * @param x1 First X coordinate
+     * @param z1 First Z coordinate
+     * @param x2 Second X coordinate
+     * @param z2 Second Z coordinate
+     * @return The execution status with everything except 1 meaning a problem occurred
+     */
     private static int executeSpawnProtectionGlobal(CommandSourceStack source, int x1, int z1, int x2, int z2) {
         // Calculate the area covered
         int area = Math.abs(x1 - x2) * Math.abs(z1 - z2);
@@ -45,7 +54,16 @@ public class SpawnProtectionCommand {
         return correctExecution;
     }
 
+    /**
+     * Executes the local spawn protection command, called independently or from {@link SpawnProtectionCommand#executeSpawnProtectionGlobal(CommandSourceStack, int, int, int, int)}
+     * @param source {@link CommandSourceStack} of the command
+     * @param x X coordinate
+     * @param z Z coordinate
+     * @param first Indicate if it is the first or second point
+     * @return The execution status with everything except 1 meaning a problem occurred
+     */
     private static int executeSpawnProtectionLocal(CommandSourceStack source, int x, int z, boolean first) {
+        
         ServerLevel level = source.getLevel();
 
         // Display a warning if the player is not in the overworld
@@ -63,20 +81,31 @@ public class SpawnProtectionCommand {
             }
         } catch (IOException e) {
             source.sendFailure(new TextComponent("Couldn't create file: " + spawnProtFile));
+            return 0;
         }
 
         // Change the coordinates in the file to the new coordinates
         // Check if the file is usable
-        if (!Files.isReadable(spawnProtFile))
+        if (!Files.isReadable(spawnProtFile)) {
             source.sendFailure(new TextComponent("The file is not readable"));
-        if (!Files.isWritable(spawnProtFile))
+            return 0;
+        }
+        if (!Files.isWritable(spawnProtFile)) {
             source.sendFailure(new TextComponent("The file is not writable"));
-        if (!Files.isRegularFile(spawnProtFile))
+            return 0;
+        }
+        if (!Files.isRegularFile(spawnProtFile)) {
             source.sendFailure(new TextComponent("The file is not a file :/"));
+            return 0;
+        }
 
         // Write new coordinates
         try {
             List<String> lines = Files.readAllLines(spawnProtFile);
+            for (int i = lines.size(); i < 4; i++) {
+                lines.add(i, "");
+            }
+
             if (first) {
                 lines.set(0, String.valueOf(x));
                 lines.set(1, String.valueOf(z));
@@ -88,6 +117,7 @@ public class SpawnProtectionCommand {
             Files.write(spawnProtFile, lines);
         } catch (IOException e) {
             source.sendFailure(new TextComponent("An exception occurred!"));
+            
             return 0;
         }
 
