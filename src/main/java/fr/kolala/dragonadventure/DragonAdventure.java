@@ -36,4 +36,8 @@ public class DragonAdventure
         RandomTpCommand.register(event.getDispatcher());
         SpawnProtectionCommand.register(event.getDispatcher());
     }
+
+    public static Logger getLogger() {
+        return LOGGER;
+    }
 }

@@ -2,11 +2,14 @@ package fr.kolala.dragonadventure.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import fr.kolala.dragonadventure.DragonAdventure;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.storage.LevelResource;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,8 +18,11 @@ import java.util.List;
 
 public class SpawnProtectionCommand {
     private static final int MAX_AREA = 65536;
+    private static Logger LOGGER;
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        LOGGER = DragonAdventure.getLogger();
+
         dispatcher.register(Commands.literal("spawnprot").requires(source -> source.hasPermission(4))
                 .then(Commands.argument("x1", IntegerArgumentType.integer()).then(Commands.argument("z1", IntegerArgumentType.integer())
                         .then(Commands.argument("x2", IntegerArgumentType.integer()).then(Commands.argument("z2", IntegerArgumentType.integer())
@@ -45,7 +51,7 @@ public class SpawnProtectionCommand {
         int area = Math.abs(x1 - x2) * Math.abs(z1 - z2);
         if (area > MAX_AREA)
         {
-            source.sendFailure(new TextComponent("The selected area is too big"));
+            source.sendFailure(new TranslatableComponent("command.dragonadventure.spawnprot.too_big", area, MAX_AREA));
         }
 
         int correctExecution;
@@ -68,7 +74,7 @@ public class SpawnProtectionCommand {
 
         // Display a warning if the player is not in the overworld
         if (level.dimension() != ServerLevel.OVERWORLD) {
-            source.sendFailure(new TextComponent("You can't set a spawn protection outside the Overworld!"));
+            source.sendFailure(new TranslatableComponent("command.dragonadventure.spawnprot.dimension"));
             return 0;
         }
 
@@ -81,6 +87,7 @@ public class SpawnProtectionCommand {
             }
         } catch (IOException e) {
             source.sendFailure(new TextComponent("Couldn't create file: " + spawnProtFile));
+            LOGGER.trace(e.getMessage());
             return 0;
         }
 
@@ -116,10 +123,13 @@ public class SpawnProtectionCommand {
             }
             Files.write(spawnProtFile, lines);
         } catch (IOException e) {
-            source.sendFailure(new TextComponent("An exception occurred!"));
+            source.sendFailure(new TranslatableComponent("command.dragonadventure.spawnprot.error"));
+            LOGGER.trace(e.getMessage());
             
             return 0;
         }
+
+        source.sendSuccess(new TranslatableComponent("command.dragonadventure.spawnprot.success", first ? 2 : 1, x, z), true);
 
         return 1;
     }

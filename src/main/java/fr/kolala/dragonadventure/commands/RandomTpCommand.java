@@ -6,7 +6,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
@@ -28,15 +27,14 @@ public class RandomTpCommand {
         ServerPlayer player = source.getPlayerOrException();
         Level level = player.getLevel();
         if (level.dimension() != Level.OVERWORLD) {
-            source.sendFailure(new TextComponent("You can't teleport randomly outside the Overworld!"));
+            source.sendFailure(new TranslatableComponent(   "command.dragonadventure.rtp.dimension"));
             return 0;
         }
-        for (int i = 0; i < 5; i++){
-            source.sendSuccess(new TextComponent("Try #" + (i+1)), false);
+        for (int i = 0; i < 10; i++){
+            source.sendSuccess(new TranslatableComponent("command.dragonadventure.rtp.try", i+1), false);
             int x = (int) ((Math.random() + 1) * Math.pow(2, multiplier) + player.getX());
             int z = (int) ((Math.random() + 1) * Math.pow(2, multiplier) + player.getZ());
             BlockPos blockPos = new BlockPos(x, 319, z);
-            source.sendSuccess(new TextComponent("Highest point found: " + level.getBlockFloorHeight(blockPos)), true);
             boolean found = true;
             while (!canTeleport(level, blockPos)) {
                 blockPos = blockPos.below();

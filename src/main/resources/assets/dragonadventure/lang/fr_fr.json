@@ -1,5 +1,11 @@
 {
-  "command.dragonadventure.rtp.no_level": "Impossible de trouver le niveau.",
+  "command.dragonadventure.rtp.dimension": "Vous ne pouvez pas vous téléporter aléatoirement en dehors de l'Overworld !",
+  "command.dragonadventure.rtp.try": "Essai n",
   "command.dragonadventure.rtp.success": "Téléportation aléatoire effectuée avec succès: %s %s %s",
-  "command.dragonadventure.rtp.not_found": "Impossible de trouver un endroit. Essayez autre part."
+  "command.dragonadventure.rtp.not_found": "Impossible de trouver un endroit. Essayez autre part.",
+
+  "command.dragonadventure.spawnprot.too_big": "La sélection est trop grande : %s (max : %s)",
+  "command.dragonadventure.spawnprot.dimension": "Vous ne pouvez pas faire une zone de protection en dehors de l'Overworld !",
+  "command.dragonadventure.spawnprot.error": "Une erreur est survenue !",
+  "command.dragonadventure.spawnprot.success": "Fixé le point %s à : %s %s."
 }

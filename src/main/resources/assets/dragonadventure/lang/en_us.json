@@ -1,5 +1,11 @@
 {
-  "command.dragonadventure.rtp.no_level": "Couldn't find level.",
+  "command.dragonadventure.rtp.dimension": "You can't teleport randomly outside the Overworld!",
+  "command.dragonadventure.rtp.try": "Try #%s",
   "command.dragonadventure.rtp.success": "Successfully teleported to random location: %s %s %s",
-  "command.dragonadventure.rtp.not_found": "Couldn't find any location. Try somewhere else."
+  "command.dragonadventure.rtp.not_found": "Couldn't find any location. Try somewhere else.",
+
+  "command.dragonadventure.spawnprot.too_big": "The selected area is too big: %s (max: %s)",
+  "command.dragonadventure.spawnprot.dimension": "You can't set a spawn protection outside the Overworld!",
+  "command.dragonadventure.spawnprot.error": "An exception occurred!",
+  "command.dragonadventure.spawnprot.success": "Successfully set %s point to be at: %s %s."
 }
